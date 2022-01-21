@@ -10,9 +10,10 @@ pipeline {
     }
         stage ("Build image with Dockerfile") {
         steps {
+            script {
 
         customImage = docker.build("tv3ran/deploywithjenkins:${env.BUILD_ID}")
-            
+            }
         }
         }
     }
