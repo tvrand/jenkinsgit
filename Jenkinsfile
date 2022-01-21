@@ -17,5 +17,10 @@ pipeline {
             }
         }
         }
+        stage ("Push docker image to repository") {
+            steps {
+                sh "docker login --username=tv3ran password=323232qQ"
+            }
+        }
     }
 }
