@@ -11,8 +11,8 @@ pipeline {
         stage ("Build image with Dockerfile") {
         steps {
 
-        def customImage = docker.build("tv3ran/deploywithjenkins:${env.BUILD_ID}")
-        customImage.push()
+        customImage = docker.build("tv3ran/deploywithjenkins:${env.BUILD_ID}")
+            
         }
         }
     }
