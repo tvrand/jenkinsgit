@@ -38,8 +38,7 @@ pipeline {
     }
             stage ("Configure env with Ansible") {
                 steps {
-                sh "sleep 240"
-                sh 'ssh -i /home/ec2-user/.ssh/ansible_key ec2-user@13.51.183.121 "cd /home/ec2-user/ForAnsible && ansible-playbook playbook.yaml"'
+                sh 'ssh-keygen -R 13.51.183.121 && ssh -o StrictHostKeyChecking=no -i /home/ec2-user/.ssh/ansible_key ec2-user@13.51.183.121 "cd /home/ec2-user/ForAnsible && ansible-playbook playbook.yaml"'
                 }
             }
         }
