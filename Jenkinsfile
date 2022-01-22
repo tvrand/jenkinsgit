@@ -2,10 +2,6 @@ pipeline {
 
     agent any
 
-    environment {
-        AWS_ACCESS_KEY = 'AKIAXTTHHMJPHD6BB64V'
-        AWS_SECRET_ACCESS_KEY = '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'
-    }
     stages {
       stage ("Get files from github to one directory") {
         steps {
@@ -35,9 +31,8 @@ pipeline {
         }
             stage ("Create environment with Terraform") {
                 steps {
-                    sh "cd /home/ec2-user/Templates/ && export AWS_ACCESS_KEY=AKIAXTTHHMJPHD6BB64V && export AWS_SECRET_ACCESS_KEY=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 && sudo terraform init && sudo terraform apply --auto-approve"
-                    sh "export AWS_SECRET_ACCESS_KEY=5cAQuCsafy6dZLxxXslgXteYE010nXqMCBr5V8GF"
-                    sh "cd /home/ec2-user/Templates/ && sudo terraform apply --auto-approve"
+                    sh "cd /home/ec2-user/Templates/ && sudo terraform init && sudo export AWS_ACCESS_KEY=AKIAXTTHHMJPHD6BB64V && sudo export AWS_SECRET_ACCESS_KEY=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 && sudo echo AWS_SECRET_ACCESS_KEY && sudo terraform apply --auto-approve"
+
         }
     }
             stage ("Configure env with Ansible") {
