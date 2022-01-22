@@ -31,6 +31,7 @@ pipeline {
                 }
               }    
             }
+        }
             stage ("Create environment with Terraform") {
                 steps {
                     sh "cd /home/ec2-user/Templates/"
