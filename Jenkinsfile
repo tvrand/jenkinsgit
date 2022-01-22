@@ -31,7 +31,6 @@ pipeline {
         }
             stage ("Create environment with Terraform") {
                 steps {
-                    sh "whoami"
                     sh "cd /home/ec2-user/Templates/ && terraform init && terraform apply --auto-approve"
                          
 
