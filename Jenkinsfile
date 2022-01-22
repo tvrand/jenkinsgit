@@ -9,8 +9,9 @@ pipeline {
     stages {
       stage ("Get files from github to one directory") {
         steps {
-            sh "cd /home/ec2-user/BuildDir/"
             checkout scm
+            sh "sudo rsync -av --exclude '.*' /home/ec2-user/workspace/MyJob/ /home/ec2-user/BuildDir"
+            sh "cd /home/ec2-user/BuildDir/"
             
             
         }
@@ -35,11 +36,13 @@ pipeline {
             stage ("Create environment with Terraform") {
                 steps {
                     sh "cd /home/ec2-user/Templates/"
+                    sh "ls -l"
                     sh "terraform apply --auto-approve"
         }
     }
             stage ("Configure env with Ansible") {
                 steps {
+                sh "sleep 240"
                 sh 'ssh -i /home/ec2-user/.ssh/ansible_key ec2-user@13.51.183.121 "cd /home/ec2-user/ForAnsible && ansible-playbook playbook.yaml"'
                 }
             }
