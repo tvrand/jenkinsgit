@@ -35,7 +35,8 @@ pipeline {
         }
             stage ("Create environment with Terraform") {
                 steps {
-                    sh "cd /home/ec2-user/Templates/ && terraform apply --auto-approve"
+                    sh "echo $AWS_ACCESS_KEY"
+                    sh "cd /home/ec2-user/Templates/ && sudo terraform apply --auto-approve"
         }
     }
             stage ("Configure env with Ansible") {
