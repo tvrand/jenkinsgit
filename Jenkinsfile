@@ -7,6 +7,7 @@ pipeline {
         steps {
             checkout scm
             sh "sudo rsync -av --exclude '.*' /home/ec2-user/workspace/MyJob/ /home/ec2-user/BuildDir/"
+            sh "cd /home/ec2-user/BuildDir/"
         }
     }
         stage ("Build image with Dockerfile") {
