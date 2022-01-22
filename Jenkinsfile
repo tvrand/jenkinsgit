@@ -37,6 +37,8 @@ pipeline {
                 steps {
                     sh "cd /home/ec2-user/Templates/"
                     sh "ls -l"
+                    sh "hostname"
+                    sh "pwd"
                     sh "terraform apply --auto-approve"
         }
     }
