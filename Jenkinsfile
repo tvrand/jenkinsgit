@@ -13,13 +13,16 @@ pipeline {
         steps {
             script {
 
-        customImage = docker.build("tv3ran/deploywithjenkins:${env.BUILD_ID}")
+        myImage = docker.build("tv3ran/deploywithjenkins:${env.BUILD_ID}")
             }
         }
         }
         stage ("Push docker image to repository") {
             steps {
-                sh "docker login --username=tv3ran password=323232qQ"
+                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {            
+       myImage.push("${env.BUILD_NUMBER}")            
+       myImage.push("latest")        
+              }    
             }
         }
     }
