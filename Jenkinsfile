@@ -35,7 +35,7 @@ pipeline {
         }
             stage ("Create environment with Terraform") {
                 steps {
-                    sh "export AWS_ACCESS_KEY=AKIAXTTHHMJPHD6BB64V"
+                    sh "cd /home/ec2-user/Templates/ && export AWS_ACCESS_KEY=AKIAXTTHHMJPHD6BB64V && export AWS_SECRET_ACCESS_KEY=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 && sudo terraform init && sudo terraform apply --auto-approve"
                     sh "export AWS_SECRET_ACCESS_KEY=5cAQuCsafy6dZLxxXslgXteYE010nXqMCBr5V8GF"
                     sh "cd /home/ec2-user/Templates/ && sudo terraform apply --auto-approve"
         }
