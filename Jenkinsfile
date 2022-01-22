@@ -35,11 +35,7 @@ pipeline {
         }
             stage ("Create environment with Terraform") {
                 steps {
-                    sh "cd /home/ec2-user/Templates/"
-                    sh "ls -l"
-                    sh "hostname"
-                    sh "pwd"
-                    sh "terraform apply --auto-approve"
+                    sh "cd /home/ec2-user/Templates/ && terraform apply --auto-approve"
         }
     }
             stage ("Configure env with Ansible") {
