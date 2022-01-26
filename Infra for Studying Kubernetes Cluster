@@ -1,0 +1,108 @@
+provider "aws" {
+  region = "eu-west-2"
+}
+
+resource "aws_key_pair" "terrkey" {
+  key_name   = "terr_liber_key"
+  public_key = file("/Users/danyateran/.ssh/kuberkey.pub")
+}
+
+data "aws_ami" "ubuntu" {
+  owners      = ["099720109477"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
+}
+
+resource "aws_route_table" "kroute" {
+  vpc_id = aws_vpc.kubervpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.kgate.id
+  }
+}
+
+resource "aws_route_table_association" "kuberas" {
+  subnet_id      = aws_subnet.kuberSub.id
+  route_table_id = aws_route_table.kroute.id
+}
+
+resource "aws_internet_gateway" "kgate" {
+  vpc_id = aws_vpc.kubervpc.id
+  tags = {
+    Name = "Gateway for KuberVPC"
+  }
+}
+
+resource "aws_subnet" "kuberSub" {
+  vpc_id                  = aws_vpc.kubervpc.id
+  cidr_block              = "10.0.0.0/24"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "Subnet for Kubernetes Group"
+  }
+}
+
+resource "aws_instance" "master" {
+  ami                    = data.aws_ami.ubuntu.id
+  key_name               = aws_key_pair.terrkey.key_name
+  instance_type          = "t3.small"
+  subnet_id              = aws_subnet.kuberSub.id
+  vpc_security_group_ids = [aws_security_group.kubersecgroup.id]
+  tags = {
+    Name = "Master Node"
+  }
+}
+
+resource "aws_instance" "slave1" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t3.micro"
+  subnet_id              = aws_subnet.kuberSub.id
+  key_name               = aws_key_pair.terrkey.key_name
+  vpc_security_group_ids = [aws_security_group.kubersecgroup.id]
+  tags = {
+    Name = "Slave Node 1"
+  }
+}
+
+resource "aws_instance" "slave2" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t3.micro"
+  subnet_id              = aws_subnet.kuberSub.id
+  key_name               = aws_key_pair.terrkey.key_name
+  vpc_security_group_ids = [aws_security_group.kubersecgroup.id]
+  tags = {
+    Name = "Slave Node 2"
+  }
+}
+
+resource "aws_vpc" "kubervpc" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "VPC for Kubernetes Group"
+  }
+}
+
+resource "aws_security_group" "kubersecgroup" {
+  name        = "Kubernetes Sec Group"
+  description = "Security Group for Kubernetes Cluster"
+  vpc_id      = aws_vpc.kubervpc.id
+
+  ingress {
+
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
