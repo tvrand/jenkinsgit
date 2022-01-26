@@ -1,0 +1,55 @@
+---
+
+- name: Configure Kubernetes Nodes
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: install Docker
+    apt:
+      name: docker.io
+      state: present
+      update_cache: true
+
+  - name: install API Transport
+    apt:
+      name: apt-transport-https
+      state: present
+
+  - name: add Kuberenets apt-key
+    apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      state: present
+
+  - name: add Kuberenetes APT repo
+    apt_repository:
+      repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+      state: present
+      filename: 'kubernetes'
+
+  - name: install kubelet
+    apt:
+      name: kubelet
+      state: present
+      update_cache: true
+
+  - name: install kubeadm
+    apt:
+      name: kubeadm
+      state: present
+
+  - name: enable correct cgroups
+    copy:
+      src: /home/ec2-user/10-kubeadm.conf
+      dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+      mode: 640
+
+- hosts: master
+  become: yes
+  
+  tasks:
+  - name: install kubectl
+    apt:
+      name: kubectl
+      state: present
+      force: yes
