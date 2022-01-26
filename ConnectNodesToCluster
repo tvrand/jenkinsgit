@@ -1,0 +1,20 @@
+---
+- hosts: master
+  become: yes
+  gather_facts: false
+  
+  tasks:
+    - name: Get command for connection
+      shell: kubeadm token create --print-join-command
+      register: joincomm
+
+    - name: Set command
+      set_fact:
+        joincommI: "{{ joincomm.stdout_lines[0] }}"
+
+- hosts: slaves
+  become: yes
+
+  tasks:
+  - name: join cluster
+    shell: "{{ hostvars['master'].joincommI }}"
