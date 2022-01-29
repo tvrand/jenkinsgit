@@ -39,7 +39,7 @@ pipeline {
             stage ("Configure env with Ansible") {
                 steps {
                     sshagent(credentials : ['ansiblekey']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@16.170.223.50 "cd /home/ec2-user/ForAnsible && ansible-playbook playbook.yaml"'
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@13.40.100.44 "cd /home/ec2-user/ForAnsible/Kuber && ansible-playbook kubernodes.yml"'
                     }
                 }
             }
